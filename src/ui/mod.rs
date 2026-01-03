@@ -36,6 +36,7 @@ pub struct AppState {
     pub navigation_stack: Vec<(GitHubUrl, usize)>,
     pub frame_count: u64,
     pub toast: Option<Toast>,
+    pub ascii_mode: bool,
 }
 
 impl AppState {
@@ -52,6 +53,7 @@ impl AppState {
             navigation_stack: Vec::new(),
             frame_count: 0,
             toast: None,
+            ascii_mode: false,
         }
     }
 
@@ -208,6 +210,7 @@ async fn event_loop(
                             scroll_offset: state_lock.scroll_offset,
                             status_msg: &state_lock.status_message,
                             is_downloading: state_lock.downloading,
+                            ascii_mode: state_lock.ascii_mode,
                         };
                         components::browser::render(f, size, &browser_state);
                     }
@@ -315,6 +318,11 @@ async fn handle_input(key: KeyEvent, state: Arc<Mutex<AppState>>, client: &GitHu
         AppMode::Browse => {
              match key.code {
                 KeyCode::Char('q') | KeyCode::Char('Q') => return Ok(true),
+                KeyCode::Char('i') => {
+                    s.ascii_mode = !s.ascii_mode;
+                    let msg = if s.ascii_mode { "ASCII Icons" } else { "Emoji Icons" };
+                    s.show_toast(msg.to_string(), ToastType::Info);
+                }
                 
                 // moving around
                 KeyCode::Up => s.move_up(),
@@ -422,6 +430,7 @@ async fn perform_download(state: Arc<Mutex<AppState>>) -> Result<()> {
     };
     
     let download_dir = dirs::download_dir()
+        .or_else(|| dirs::home_dir().map(|h| h.join("Downloads")))
         .context("Could not find User Downloads directory")?
         .join(repo_name);
 

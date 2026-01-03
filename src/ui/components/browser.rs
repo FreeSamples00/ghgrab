@@ -17,6 +17,7 @@ pub struct BrowserState<'a> {
     #[allow(dead_code)]
     pub status_msg: &'a str,
     pub is_downloading: bool,
+    pub ascii_mode: bool,
 }
 
 pub fn render(f: &mut Frame, area: Rect, state: &BrowserState) {
@@ -76,10 +77,10 @@ pub fn render(f: &mut Frame, area: Rect, state: &BrowserState) {
             "DIR".to_string()
         } else {
             name.rsplit('.')
-                .next()
-                .filter(|ext| !ext.is_empty() && ext.len() <= 5)
-                .map(|ext| ext.to_uppercase())
-                .unwrap_or_else(|| "FILE".to_string())
+            .next()
+            .filter(|ext| !ext.is_empty() && ext.len() <= 5)
+            .map(|ext| ext.to_uppercase())
+            .unwrap_or_else(|| "FILE".to_string())
         }
     }
 
@@ -103,7 +104,11 @@ pub fn render(f: &mut Frame, area: Rect, state: &BrowserState) {
         .map(|(idx, item)| {
             let is_selected = idx == state.cursor;
             
-            let icon = if item.is_dir() { "📁 " } else { "📄 " };
+            let icon = if state.ascii_mode {
+                if item.is_dir() { "[D] " } else { "[F] " }
+            } else {
+                if item.is_dir() { "📁 " } else { "📄 " }
+            };
 
             let mark = if item.selected { 
                 Span::styled("[●] ", Style::default().fg(SUCCESS_COLOR))
@@ -213,6 +218,9 @@ pub fn render(f: &mut Frame, area: Rect, state: &BrowserState) {
         Span::styled("  │  ", Style::default().fg(BORDER_COLOR)),
         Span::styled("d", Style::default().fg(SUCCESS_COLOR).add_modifier(Modifier::BOLD)),
         Span::styled(" Download", Style::default().fg(BORDER_COLOR)),
+        Span::styled("  │  ", Style::default().fg(BORDER_COLOR)),
+        Span::styled("i", Style::default().fg(ACCENT_COLOR).add_modifier(Modifier::BOLD)),
+        Span::styled(" Icons", Style::default().fg(BORDER_COLOR)),
         Span::styled("  │  ", Style::default().fg(BORDER_COLOR)),
         Span::styled("←", Style::default().fg(ERROR_COLOR).add_modifier(Modifier::BOLD)),
         Span::styled(" Back", Style::default().fg(BORDER_COLOR)),
