@@ -176,6 +176,7 @@ struct LfsDownloadAction {
     href: String,
 }
 
+#[derive(Clone)]
 pub struct GitHubClient {
     client: reqwest::Client,
 }

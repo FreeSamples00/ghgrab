@@ -124,7 +124,9 @@ jobs:
   publish-pypi:
     needs: release
     runs-on: ubuntu-latest
+    environment: release
     permissions:
+      contents: read
       id-token: write
     steps:
       - uses: actions/checkout@v4
@@ -148,6 +150,10 @@ jobs:
   publish-crates:
     needs: release
     runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -155,4 +161,4 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Publish to crates.io
-        run: cargo publish --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish
