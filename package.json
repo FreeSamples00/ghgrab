@@ -1,6 +1,6 @@
 {
   "name": "@ghgrab/ghgrab",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "A terminal-based tool for downloading specific files and folders from GitHub repositories",
   "bin": {
     "ghgrab": "bin/ghgrab.js"
