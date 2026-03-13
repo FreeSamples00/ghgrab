@@ -728,7 +728,7 @@ fn map_tree_to_items(
             let name = entry
                 .path
                 .split('/')
-                .last()
+                .next_back()
                 .unwrap_or(&entry.path)
                 .to_string();
             let item_type = if entry.entry_type == "tree" {
