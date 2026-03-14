@@ -107,12 +107,22 @@ pub fn render(
         if cursor_visible {
             Line::from(vec![
                 Span::styled("_", Style::default().fg(FG_COLOR)),
-                Span::styled(" (Press Tab to auto-fill GitHub URL)", Style::default().fg(BORDER_COLOR).add_modifier(Modifier::ITALIC)),
+                Span::styled(
+                    " (Press Tab to auto-fill GitHub URL)",
+                    Style::default()
+                        .fg(BORDER_COLOR)
+                        .add_modifier(Modifier::ITALIC),
+                ),
             ])
         } else {
             Line::from(vec![
                 Span::styled(" ", Style::default().fg(FG_COLOR)),
-                Span::styled(" (Press Tab to auto-fill GitHub URL)", Style::default().fg(BORDER_COLOR).add_modifier(Modifier::ITALIC)),
+                Span::styled(
+                    " (Press Tab to auto-fill GitHub URL)",
+                    Style::default()
+                        .fg(BORDER_COLOR)
+                        .add_modifier(Modifier::ITALIC),
+                ),
             ])
         }
     } else if cursor_visible {

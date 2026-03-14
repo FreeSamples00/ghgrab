@@ -370,12 +370,18 @@ async fn handle_input(
 
     match s.mode {
         AppMode::Input => match key.code {
-            KeyCode::Char('w') | KeyCode::Char('u') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+            KeyCode::Char('w') | KeyCode::Char('u')
+                if key.modifiers.contains(KeyModifiers::CONTROL) =>
+            {
                 s.url_input.clear();
                 s.url_cursor = 0;
             }
             KeyCode::Char('v') if key.modifiers.contains(KeyModifiers::CONTROL) => {}
-            KeyCode::Char(c) if !key.modifiers.intersects(KeyModifiers::CONTROL | KeyModifiers::ALT | KeyModifiers::SUPER) => {
+            KeyCode::Char(c)
+                if !key.modifiers.intersects(
+                    KeyModifiers::CONTROL | KeyModifiers::ALT | KeyModifiers::SUPER,
+                ) =>
+            {
                 let pos = s.url_cursor;
                 s.url_input.insert(pos, c);
                 s.url_cursor += 1;
@@ -397,7 +403,8 @@ async fn handle_input(
                 if key.modifiers.contains(KeyModifiers::CONTROL)
                     || key.modifiers.contains(KeyModifiers::ALT)
                     || key.modifiers.contains(KeyModifiers::SUPER)
-                    || s.url_input.len() > 0 // User said "just del" to remove full URL
+                    || s.url_input.len() > 0
+                // User said "just del" to remove full URL
                 {
                     s.url_input.clear();
                     s.url_cursor = 0;
@@ -415,7 +422,9 @@ async fn handle_input(
             }
             KeyCode::Tab => {
                 let target = "https://github.com/";
-                if s.url_input.is_empty() || (target.starts_with(&s.url_input) && s.url_input.len() < target.len()) {
+                if s.url_input.is_empty()
+                    || (target.starts_with(&s.url_input) && s.url_input.len() < target.len())
+                {
                     s.url_input = target.to_string();
                     s.url_cursor = s.url_input.len();
                 }
